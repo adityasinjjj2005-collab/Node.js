@@ -1,0 +1,34 @@
+// Core Modules
+const db = require("../utils/databaseUtil");
+
+module.exports = class Home {
+  constructor(houseName, price, location, photoUrl, description, id) {
+    this.houseName = houseName;
+    this.price = price;
+    this.location = location;
+    this.photoUrl = photoUrl;
+    this.description = description;
+    this.id = id;
+  }
+
+  save() {
+    if (this.id) { // update
+      return db.execute('UPDATE homes SET houseName=?, price=?, location=?,photoUrl=?, description=? WHERE id=?', [this.houseName, this.price, this.location,  this.photoUrl, this.description, this.id]);
+
+    } else { // insert
+      return db.execute('INSERT INTO homes (houseName, price, location,  photoUrl, description) VALUES (?, ?, ?, ?, ?)', [this.houseName, this.price, this.location, this.photoUrl, this.description]);
+    }
+  }
+
+  static fetchAll() {
+    return db.execute('SELECT * FROM homes');
+  }
+
+  static findById(homeId) {
+    return db.execute('SELECT * FROM homes WHERE id=?', [homeId]);
+  }
+
+  static deleteById(homeId) {
+    return db.execute('DELETE FROM homes WHERE id=?', [homeId]);
+  }
+};
